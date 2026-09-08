@@ -28,6 +28,9 @@
   <button id="requestPermission">알림 권한 요청</button>
   <button id="subscribePush">Push 구독하기</button>
 
+  <h3>④ 앱 연동</h3>
+  <button id="openRealtalk">리얼톡(무전) 기능 사용하기</button>
+
   <div id="log">로그가 여기에 표시됩니다.</div>
 
 <script>
@@ -104,6 +107,24 @@ document.getElementById('subscribePush').onclick = async () => {
   } catch (err) {
     log('Push 구독 실패: ' + err);
   }
+};
+
+// ④ 네이티브 앱(realtalk)으로 메시지 전달
+// realtalk 네이티브 코드는 WKUserContentController에 name: "realtalkBridge"로
+// 핸들러를 등록해두고, message.body.action === "OPEN_REALTALK"을 받으면
+// 화면 전환을 수행해야 함
+document.getElementById('openRealtalk').onclick = () => {
+  const bridge = window.webkit
+    && window.webkit.messageHandlers
+    && window.webkit.messageHandlers.realtalkBridge;
+
+  if (!bridge) {
+    log('네이티브 브릿지 없음: realtalk 앱 웹뷰 안에서만 동작합니다.');
+    return;
+  }
+
+  bridge.postMessage({ action: 'OPEN_REALTALK' });
+  log('네이티브로 OPEN_REALTALK 메시지 전송');
 };
 </script>
 </body>
