@@ -51,7 +51,8 @@
   <h3>부가 기능</h3>
   <button id="notice">공지사항</button>
   <button id="locationCheck">위치확인</button>
-  <button id="sos" style="background:#dc2626;color:#fff;">구조/구급신고</button>
+  <button id="sosCall" style="background:#dc2626;color:#fff;">구조/구급신고(전화)</button>
+  <button id="sos" style="background:#dc2626;color:#fff;">구조/구급신고(SMS)</button>
 
   <div id="log">로그가 여기에 표시됩니다.</div>
 
@@ -227,7 +228,13 @@ document.getElementById('locationCheck').onclick = () => {
   log('위치확인 버튼 클릭됨 (기능 미구현)');
 };
 
-// 구조/구급신고: 현재 위치를 담아 119로 보낼 SMS 작성 화면을 연다.
+// 구조/구급신고(전화): 119로 바로 전화 연결
+document.getElementById('sosCall').onclick = () => {
+  log('119로 전화를 겁니다.');
+  window.location.href = 'tel:119';
+};
+
+// 구조/구급신고(SMS): 현재 위치를 담아 119로 보낼 SMS 작성 화면을 연다.
 // iOS는 웹/앱에서 SMS를 자동 발송하는 것을 허용하지 않으므로,
 // 메시지 앱을 미리 채워서 열어주고 실제 전송은 사용자가 직접 눌러야 한다.
 function sendSosSms(coords) {
