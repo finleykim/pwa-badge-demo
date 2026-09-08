@@ -51,6 +51,7 @@
   <h3>부가 기능</h3>
   <button id="notice">공지사항</button>
   <button id="locationCheck">위치확인</button>
+  <button id="sos" style="background:#dc2626;color:#fff;">구조/구급신고</button>
 
   <div id="log">로그가 여기에 표시됩니다.</div>
 
@@ -224,6 +225,44 @@ document.getElementById('notice').onclick = () => {
 
 document.getElementById('locationCheck').onclick = () => {
   log('위치확인 버튼 클릭됨 (기능 미구현)');
+};
+
+// 구조/구급신고: 현재 위치를 담아 119로 보낼 SMS 작성 화면을 연다.
+// iOS는 웹/앱에서 SMS를 자동 발송하는 것을 허용하지 않으므로,
+// 메시지 앱을 미리 채워서 열어주고 실제 전송은 사용자가 직접 눌러야 한다.
+function sendSosSms(coords) {
+  let body = '[긴급 구조/구급 신고] 도움이 필요합니다.';
+
+  if (coords) {
+    const lat = coords.latitude.toFixed(6);
+    const lng = coords.longitude.toFixed(6);
+    const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
+    body += ` 현재 위치: 위도 ${lat}, 경도 ${lng} (${mapsUrl})`;
+  } else {
+    body += ' (위치 정보를 가져올 수 없어 위치는 포함되지 않았습니다)';
+  }
+
+  const smsLink = `sms:119&body=${encodeURIComponent(body)}`;
+  log('메시지 앱으로 이동합니다. 내용 확인 후 직접 전송 버튼을 눌러주세요.');
+  window.location.href = smsLink;
+}
+
+document.getElementById('sos').onclick = () => {
+  if (!('geolocation' in navigator)) {
+    log('이 브라우저는 위치 정보를 지원하지 않습니다. 위치 없이 신고를 진행합니다.');
+    sendSosSms(null);
+    return;
+  }
+
+  log('현재 위치를 확인하는 중...');
+  navigator.geolocation.getCurrentPosition(
+    (pos) => sendSosSms(pos.coords),
+    (err) => {
+      log('위치 정보를 가져오지 못했습니다: ' + err.message);
+      sendSosSms(null);
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
 };
 </script>
 </body>
