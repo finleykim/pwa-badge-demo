@@ -110,13 +110,13 @@ document.getElementById('subscribePush').onclick = async () => {
 };
 
 // ④ 네이티브 앱(realtalk)으로 메시지 전달
-// realtalk 네이티브 코드는 WKUserContentController에 name: "realtalkBridge"로
+// TSZWebEntryViewController.swift가 WKUserContentController에 name: "nativeBridge"로
 // 핸들러를 등록해두고, message.body.action === "OPEN_REALTALK"을 받으면
-// 화면 전환을 수행해야 함
+// 화면 전환을 수행함
 document.getElementById('openRealtalk').onclick = () => {
   const bridge = window.webkit
     && window.webkit.messageHandlers
-    && window.webkit.messageHandlers.realtalkBridge;
+    && window.webkit.messageHandlers.nativeBridge;
 
   if (!bridge) {
     log('네이티브 브릿지 없음: realtalk 앱 웹뷰 안에서만 동작합니다.');
