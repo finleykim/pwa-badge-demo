@@ -10,25 +10,32 @@
 <style>
   body { font-family: -apple-system, sans-serif; padding: 20px; }
   button { display: block; width: 100%; padding: 14px; margin: 8px 0; font-size: 16px; }
+  #badgeMenuToggle { display: flex; justify-content: space-between; align-items: center; background: #eee; }
+  #badgeMenuToggle .arrow { transition: transform 0.2s; }
+  #badgeMenuToggle[aria-expanded="true"] .arrow { transform: rotate(90deg); }
+  #badgeSection { padding-left: 12px; border-left: 3px solid #eee; margin-bottom: 12px; }
   #log { background: #f2f2f2; padding: 10px; margin-top: 20px; white-space: pre-wrap; font-size: 13px; border-radius: 6px; }
 </style>
 </head>
 <body>
-  <h2>PWA Badge 테스트</h2>
+  <h2>World Youth Day</h2>
 
-  <h3>① API 지원 여부 확인</h3>
-  <button id="checkSupport">setAppBadge 지원 확인</button>
+  <button id="badgeMenuToggle" aria-expanded="false">PWA Badge 테스트 <span class="arrow">▸</span></button>
+  <div id="badgeSection" hidden>
+    <h3>① API 지원 여부 확인</h3>
+    <button id="checkSupport">setAppBadge 지원 확인</button>
 
-  <h3>② 배지 직접 테스트 (서버 없이)</h3>
-  <button id="setBadge5">배지 5로 설정</button>
-  <button id="setBadgeDot">배지 점(dot)만 표시</button>
-  <button id="clearBadge">배지 지우기</button>
+    <h3>② 배지 직접 테스트 (서버 없이)</h3>
+    <button id="setBadge5">배지 5로 설정</button>
+    <button id="setBadgeDot">배지 점(dot)만 표시</button>
+    <button id="clearBadge">배지 지우기</button>
 
-  <h3>③ 알림 권한 + 푸시 구독 (서버 연동용)</h3>
-  <button id="requestPermission">알림 권한 요청</button>
-  <button id="subscribePush">Push 구독하기</button>
+    <h3>③ 알림 권한 + 푸시 구독 (서버 연동용)</h3>
+    <button id="requestPermission">알림 권한 요청</button>
+    <button id="subscribePush">Push 구독하기</button>
+  </div>
 
-  <h3>④ 앱 연동</h3>
+  <h3>앱 연동</h3>
   <button id="openRealtalk">리얼톡(무전) 기능 사용하기</button>
 
   <div id="log">로그가 여기에 표시됩니다.</div>
@@ -37,6 +44,14 @@
 const log = (msg) => {
   const el = document.getElementById('log');
   el.textContent = new Date().toLocaleTimeString() + ' - ' + msg + '\n' + el.textContent;
+};
+
+// PWA Badge 테스트 소항목 토글
+document.getElementById('badgeMenuToggle').onclick = (e) => {
+  const section = document.getElementById('badgeSection');
+  const expanded = !section.hidden;
+  section.hidden = expanded;
+  e.currentTarget.setAttribute('aria-expanded', String(!expanded));
 };
 
 // 서비스워커 등록
